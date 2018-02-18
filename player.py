@@ -11,48 +11,66 @@ class Player(pygame.sprite.Sprite):
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.center = (width/2, 5*height/6)
-        self.acx = 0
-        self.acy = 0
-        self.speedx = 0
-        self.speedy = 0
+        self.acX = 0
+        self.acY = 0
+        self.velX = 0
+        self.velY = 0
 
     def update(self):
-        self.movement()
+        self.movement_control()
+        self.friction()
+        self.position_change()
 
-    def movement(self):
-        self.acx = 0
-        self.acy = 0
+    def movement_control(self):
+        self.acX = 0
+        self.acY = 0
         keystate = pygame.key.get_pressed() #List of keys pressed
         # Acceleration
         if keystate[pygame.K_LEFT]:
-            self.acx = -1
+            self.acX = -1
         if keystate[pygame.K_RIGHT]:
-            self.acx = 1
+            self.acX = 1
         if keystate[pygame.K_UP]:
-            self.acy = -1
+            self.acY = -1
         if keystate[pygame.K_DOWN]:
-            self.acy = 1
+            self.acY = 1
 
-        #Player position adjust
-        self.speedx += self.acx
-        self.speedy += self.acy
-        self.rect.x += self.speedx
-        self.rect.y += self.speedy
+        self.velX += self.acX
+        self.velY += self.acY
+
+    def friction(self):
+        print(self.velX, self.velY)
+        if self.velX > 0:
+            self.velX -= self.velX*0.05 + 0.2
+        if self.velX < 0:
+            self.velX -= self.velX*0.05 - 0.2
+        if self.velY > 0:
+            self.velY -= self.velY*0.05 + 0.2
+        if self.velY < 0:
+            self.velY -= self.velY*0.05 - 0.2
+        if 0.11 > self.velX > -0.11:
+            self.velX = 0
+        if 0.11 > self.velY > -0.11:
+            self.velY = 0
+
+    def position_change(self):
+        self.rect.x += self.velX
+        self.rect.y += self.velY
 
         #Edge block
         if self.rect.right >= width:
-            self.acx = 0
-            self.speedx = 0
+            self.acX = 0
+            self.velX = 0
             self.rect.right = width - 1
         if self.rect.left <= 0:
-            self.acx = 0
-            self.speedx = 0
+            self.acX = 0
+            self.velX = 0
             self.rect.left = 1
         if self.rect.top <= 0:
-            self.acy = 0
-            self.speedy = 0
+            self.acY = 0
+            self.velY = 0
             self.rect.top = 1
         if self.rect.bottom >= height:
-            self.acy = 0
-            self.speedy = 0
+            self.acY = 0
+            self.velY = 0
             self.rect.bottom = height - 1
