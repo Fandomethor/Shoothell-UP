@@ -10,4 +10,7 @@ BLUE = (0, 0, 255)
 #Images
 game_folder = os.path.dirname(__file__)
 img_folder = os.path.join(game_folder, "images")
-tank1Up = os.path.join(img_folder, "tank.jpg")
+#tank1Up = os.path.join(img_folder, "tank.jpg")
+
+#Spawn height
+spawn_height = -100
